@@ -59,7 +59,7 @@ usersRouter.post("/login", async (req,res,next) => {
     const { email, password } = req.body
     const user = await UserModel.findByCredentials(email, password)
 
-    if (!user) throw new Error("User doesn't exist")
+    if (!user) throw new Error("Incorrect email/password")
 
     const { token, refreshToken } = await authenticate(user)
 
