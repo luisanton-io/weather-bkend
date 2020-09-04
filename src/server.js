@@ -11,7 +11,7 @@ const mongoose = require("mongoose")
 const cookieParser = require("cookie-parser")
 
 const usersRouter = require("./services/users")
-const searchRouter = require("./services/search")
+const citiesRouter = require("./services/cities")
 const weatherRouter = require("./services/weather")
 
 const server = express()
@@ -45,7 +45,7 @@ server.use(express.json())
 server.use(passport.initialize())
 
 server.use("/users", usersRouter)
-server.use("/search", searchRouter)
+server.use("/cities", citiesRouter)
 server.use("/weather", weatherRouter)
 
 server.use(badRequestHandler)

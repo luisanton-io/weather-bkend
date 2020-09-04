@@ -2,9 +2,9 @@
 let express = require("express")
 let fetch = require("node-fetch")
 
-let searchRouter = express()
+let citiesRouter = express()
 
-searchRouter.get("/", async (req, res, next) => {
+citiesRouter.get("/", async (req, res, next) => {
 
     try {
         let response = await fetch(process.env.WEATHER_SEARCH_ENDPOINT + req.query.q)
@@ -16,4 +16,4 @@ searchRouter.get("/", async (req, res, next) => {
 
 })
 
-module.exports = searchRouter
+module.exports = citiesRouter
