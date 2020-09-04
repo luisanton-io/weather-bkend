@@ -9,25 +9,7 @@ const { authenticate, refreshToken } = require("./authTools")
 const usersRouter = express.Router()
 const passport = require("passport")
 
-// usersRouter.get("/", authorize, async (req, res, next) => {
-//   try {
-//     const query = q2m(req.query)
-
-//     const users = await UserSchema.find(query.criteria, query.options.fields)
-//       .skip(query.options.skip)
-//       .limit(query.options.limit)
-//       .sort(query.options.sort)
-
-//     res.send({
-//       data: users,
-//       total: users.length,
-//     })
-//   } catch (error) {
-//     console.log(error)
-//     next(error)
-//   }
-// })
-
+//debugg
 usersRouter.get("/me", authorize, async (req, res, next) => {
   try {
     res.send(req.user)
@@ -161,7 +143,7 @@ usersRouter.get('/facebook/callback',
   });
 
 
-usersRouter.post("/list", authorize, async(req,res,next)=> {
+usersRouter.post("/cities", authorize, async(req,res,next)=> {
 try {
   let city = req.body.city
 
@@ -169,23 +151,42 @@ try {
 
   let user = req.user
 
-  if (!user.list.some( _city => _city.id === city.id )) {
+  if (!user.cities.some( _city => _city.id === city.id )) {
 
-    user.list = [
-      ...user.list, city
+    user.cities = [
+      ...user.cities, city
     ]
   
     await user.save()
   }
 
-  res.status(200).send(user.list)
+  res.status(200).send(user.cities)
   
 } catch (error) {
   error.httpStatusCode = 400
   next(error)
 }
+})
 
+usersRouter.delete("/cities/:id", authorize, async (req,res,next) => {
+  try {
+    req.user.cities = req.user.cities.filter( city => city.id !== parseInt(req.params.id))
 
+    await req.user.save()
+  
+    res.send("Deleted.")
+  } catch (error) {
+    next(error)
+  }
+})
+
+usersRouter.get("/cities", authorize, async(req,res, next) => {
+  try {
+    if (!req.user.cities) throw new Error("No cities")
+    res.send(req.user.cities)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = usersRouter

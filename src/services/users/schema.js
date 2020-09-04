@@ -8,7 +8,7 @@ const UserSchema = new Schema(
   {
     email: {
       type: String,
-      requried: true,
+      required: true,
       lowercase: true,
       validate: async (value) => {
         if (v.isEmail(value)) {
@@ -33,7 +33,7 @@ const UserSchema = new Schema(
     fbAuthId: {
       type: String
     },
-    list: {
+    cities: {
       type: [CityModel.schema],
     }
   }
