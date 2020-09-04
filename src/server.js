@@ -56,7 +56,7 @@ server.use(genericErrorHandler)
 console.log(listEndpoints(server))
 
 mongoose
-  .connect("mongodb://localhost:27018/weather-app", {
+  .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
