@@ -160,4 +160,32 @@ usersRouter.get('/facebook/callback',
     res.redirect(`http://localhost:3000/home`);
   });
 
+
+usersRouter.post("/list", authorize, async(req,res,next)=> {
+try {
+  let city = req.body.city
+
+  if (!city) throw new Error ("City not defined")
+
+  let user = req.user
+
+  if (!user.list.some( _city => _city.id === city.id )) {
+
+    user.list = [
+      ...user.list, city
+    ]
+  
+    await user.save()
+  }
+
+  res.status(200).send(user.list)
+  
+} catch (error) {
+  error.httpStatusCode = 400
+  next(error)
+}
+
+
+})
+
 module.exports = usersRouter

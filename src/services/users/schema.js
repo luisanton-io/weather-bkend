@@ -2,6 +2,7 @@ const { Schema } = require("mongoose")
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const v = require("validator")
+const CityModel = require("../cities/schema")
 
 const UserSchema = new Schema(
   {
@@ -15,14 +16,6 @@ const UserSchema = new Schema(
           if (user) throw new Error("This username already exists!")
         } else throw new Error("Invalid email.")
       }
-    },
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
     },
     password: {
       type: String,
@@ -39,6 +32,9 @@ const UserSchema = new Schema(
     ],
     fbAuthId: {
       type: String
+    },
+    list: {
+      type: [CityModel.schema],
     }
   }
 )
@@ -63,6 +59,15 @@ UserSchema.methods.toJSON = function () {
   return userObject
 }
 
+UserSchema.post("validate", function (error, doc, next) {
+  if (error) {
+    error.httpStatusCode = 400
+    next(error)
+  } else {
+    next()
+  }
+})
+
 UserSchema.pre("save", async function (next) {
   const user = this
 
@@ -71,15 +76,6 @@ UserSchema.pre("save", async function (next) {
   }
 
   next()
-})
-
-UserSchema.post("validate", function (error, doc, next) {
-  if (error) {
-    error.httpStatusCode = 400
-    next(error)
-  } else {
-    next()
-  }
 })
 
 UserSchema.post("save", function (error, doc, next) {
